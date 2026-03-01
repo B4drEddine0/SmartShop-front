@@ -1,26 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Outlet, Navigate } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { TopBar } from './TopBar';
 import { cn } from '@/lib/utils';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuthStore } from '@/stores/authStore';
 
 export function AppLayout() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { isAuthenticated, isLoading, checkSession } = useAuth();
-
-  useEffect(() => {
-    checkSession();
-  }, [checkSession]);
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-bg-light dark:bg-bg-primary">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-500" />
-      </div>
-    );
-  }
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;

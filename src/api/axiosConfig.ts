@@ -15,6 +15,8 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       // Only redirect if not already on the login page
       if (window.location.pathname !== '/login') {
+        // Clear persisted auth so the guard doesn't restore a stale session
+        localStorage.removeItem('smartshop-auth');
         window.location.href = '/login';
       }
     } else if (error.response?.status === 403) {
