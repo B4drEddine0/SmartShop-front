@@ -6,8 +6,10 @@ interface AuthState {
   user: SessionUser | null;
   isLoading: boolean;
   isAuthenticated: boolean;
+  _hasHydrated: boolean;
   setUser: (user: SessionUser | null) => void;
   setLoading: (loading: boolean) => void;
+  setHasHydrated: (val: boolean) => void;
   logout: () => void;
 }
 
@@ -17,13 +19,18 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       isLoading: false,
       isAuthenticated: false,
+      _hasHydrated: false,
       setUser: (user) => set({ user, isAuthenticated: !!user, isLoading: false }),
       setLoading: (isLoading) => set({ isLoading }),
+      setHasHydrated: (val) => set({ _hasHydrated: val }),
       logout: () => set({ user: null, isAuthenticated: false, isLoading: false }),
     }),
     {
       name: 'smartshop-auth',
       partialize: (state) => ({ user: state.user, isAuthenticated: state.isAuthenticated }),
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true);
+      },
     }
   )
 );

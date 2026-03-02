@@ -9,6 +9,17 @@ export function AppLayout() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const hasHydrated = useAuthStore((s) => s._hasHydrated);
+
+  // Wait for zustand-persist to finish reading localStorage before evaluating the guard.
+  // Without this, isAuthenticated is always false on first render → redirect to login.
+  if (!hasHydrated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-bg-light dark:bg-bg-primary">
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-500" />
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
