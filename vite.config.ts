@@ -14,8 +14,9 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'http://localhost:9090',
+        target: 'https://smartshop-vfqs.onrender.com',
         changeOrigin: true,
+        secure: false,
       },
     },
   },

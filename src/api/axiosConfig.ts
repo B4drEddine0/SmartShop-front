@@ -2,7 +2,12 @@ import axios from 'axios';
 import { toast } from 'sonner';
 
 const api = axios.create({
-  baseURL: 'https://smartshop-vfqs.onrender.com/api',
+  // In dev, use relative /api so requests go through the Vite proxy (same-origin).
+  // This avoids cross-origin SameSite cookie restrictions when the backend is on a different domain.
+  // In production (Vercel), call the backend directly.
+  baseURL: import.meta.env.DEV
+    ? '/api'
+    : 'https://smartshop-vfqs.onrender.com/api',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
